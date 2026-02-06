@@ -20,6 +20,7 @@ struct ContentView: View {
     @State private var lettersGuessed = ""
     @State private var guessesRemaining = maximumGuesses
     @State private var guessedLetter = ""
+    @State private var showGuessedLetters = ""
     @State private var imageName = "flower8"
     @State private var playAgainHidden = true
     @State private var playAgainButtonLabel = "Another Word?"
@@ -56,8 +57,8 @@ struct ContentView: View {
                 .font(.title)
                 .padding(.bottom, 5)
             
-            //Display Guessed Letters
-            Text("\(lettersGuessed)")
+            //Display Incorrectly Guessed Letters
+            Text(showGuessedLetters)
                 .font(.system(size: 20))
                 .fontWeight(.semibold)
                 .foregroundStyle(.red)
@@ -123,6 +124,7 @@ struct ContentView: View {
                     imageName = "flower\(guessesRemaining)"
                     gameStatusMessage = "How Many Guesses to Uncover the Hidden Word?"
                     playAgainHidden = true
+                    showGuessedLetters = ""
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.mint)
@@ -160,6 +162,13 @@ struct ContentView: View {
             // Animate crumbling leaf and play the incorrect sound
             imageName = "wilt\(guessesRemaining)"
             playSound(soundName: "incorrect")
+            
+            let incorrectLetters = Set(lettersGuessed.filter { !wordToGuess.contains($0) })
+            showGuessedLetters = incorrectLetters
+                .sorted()
+                .map { String($0) }
+                .joined(separator: " ")
+
             // Delay change to flower image until after wilt animation is done
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                 imageName = "flower\(guessesRemaining)"
