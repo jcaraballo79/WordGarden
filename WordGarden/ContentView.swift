@@ -20,13 +20,21 @@ struct ContentView: View {
     @State private var lettersGuessed = ""
     @State private var guessesRemaining = maximumGuesses
     @State private var guessedLetter = ""
-    @State private var showGuessedLetters = ""
     @State private var imageName = "flower8"
     @State private var playAgainHidden = true
     @State private var playAgainButtonLabel = "Another Word?"
     @State private var audioPlayer: AVAudioPlayer!
     @FocusState private var textFieldIsFocused: Bool
     private let wordsToGuess = ["SWIFT", "DOG", "CAT"] // All Caps
+  
+    // Store incorrectly guessed letters in a String, sorted alphabetically
+    var incorrectLetters: String {
+        lettersGuessed
+            .filter { !wordToGuess.contains($0) }
+            .sorted()
+            .map { String($0) }
+            .joined(separator: " ")
+    }
     
     var body: some View {
         VStack {
@@ -58,7 +66,7 @@ struct ContentView: View {
                 .padding(.bottom, 5)
             
             // Display Incorrectly Guessed Letters
-            Text(showGuessedLetters)
+            Text(incorrectLetters)
                 .font(.system(size: 20))
                 .fontWeight(.semibold)
                 .foregroundStyle(.red)
@@ -124,7 +132,6 @@ struct ContentView: View {
                     imageName = "flower\(guessesRemaining)"
                     gameStatusMessage = "How Many Guesses to Uncover the Hidden Word?"
                     playAgainHidden = true
-                    showGuessedLetters = ""
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.mint)
@@ -162,12 +169,6 @@ struct ContentView: View {
             // Animate crumbling leaf and play the incorrect sound
             imageName = "wilt\(guessesRemaining)"
             playSound(soundName: "incorrect")
-            // Update showGuessedLetters to only display incorrect letters, sorted alphabetically
-            let incorrectLetters = Set(lettersGuessed.filter { !wordToGuess.contains($0) })
-            showGuessedLetters = incorrectLetters
-                .sorted()
-                .map { String($0) }
-                .joined(separator: " ")
 
             // Delay change to flower image until after wilt animation is done
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
