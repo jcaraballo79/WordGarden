@@ -57,7 +57,7 @@ struct ContentView: View {
                 .font(.title)
                 .padding(.bottom, 5)
             
-            //Display Incorrectly Guessed Letters
+            // Display Incorrectly Guessed Letters
             Text(showGuessedLetters)
                 .font(.system(size: 20))
                 .fontWeight(.semibold)
@@ -162,7 +162,7 @@ struct ContentView: View {
             // Animate crumbling leaf and play the incorrect sound
             imageName = "wilt\(guessesRemaining)"
             playSound(soundName: "incorrect")
-            
+            // Update showGuessedLetters to only display incorrect letters, sorted alphabetically
             let incorrectLetters = Set(lettersGuessed.filter { !wordToGuess.contains($0) })
             showGuessedLetters = incorrectLetters
                 .sorted()
