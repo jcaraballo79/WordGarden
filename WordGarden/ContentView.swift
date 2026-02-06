@@ -54,6 +54,15 @@ struct ContentView: View {
             //TODO: Switch to wordsToGuess[currentWordIndex]
             Text(revealedWord)
                 .font(.title)
+                .padding(.bottom, 5)
+            
+            //Display Guessed Letters
+            Text("\(lettersGuessed)")
+                .font(.system(size: 20))
+                .fontWeight(.semibold)
+                .foregroundStyle(.red)
+                .frame(maxHeight: 24, alignment: .center)
+                .minimumScaleFactor(0.5)
             
             if playAgainHidden {
                 
